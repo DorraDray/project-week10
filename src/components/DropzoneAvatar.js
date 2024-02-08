@@ -8,7 +8,7 @@ import EditImage from "./EditImage";
 // {useDropzone} hook comes from this library
 
 export default function DropzoneAvatar() {
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
   //create state for files using useState in order to show the user a preview of the selected files, letting them know the file has been recieved
   //initialised as an empty array
 
@@ -16,12 +16,18 @@ export default function DropzoneAvatar() {
     //receives both accepted and rejected files (if stipulations made)
     if (acceptedFiles?.length) {
       //if the accepted file exists (if its length is true)
-      setFiles(acceptedFiles[0]);
+      setFiles(acceptedFiles);
       // Accept only the first accepted file
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      "image/*": [],
+    },
+    // maxSize: 1024 * 1000,
+    onDrop,
+  });
   // useDropzone mainly gives us back two functions: getRootProps and getInputProps
   //hook is called with callback function "onDrop", executed when a user drops a file
 
@@ -36,7 +42,7 @@ export default function DropzoneAvatar() {
       {files.length === 0 ? (
         <p>No image selected yet</p>
       ) : (
-        <EditImage image={files.data} />
+        <EditImage image={files} />
       )}
     </>
   );
